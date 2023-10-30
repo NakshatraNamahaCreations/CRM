@@ -32,7 +32,7 @@ function Technician() {
   const [data, setdata] = useState([]);
 
   const [city1, setcity1] = useState(data.city);
-  const [category1, setcategory1] = useState(data.category);
+  const [category1, setcategory1] = useState(data?.category || []);
   const [vh, setvh] = useState(data.vhsname);
   const [smsname1, setsmsname1] = useState(data.smsname);
   const [number1, setnumber1] = useState(data.number);
@@ -43,6 +43,8 @@ function Technician() {
   const [selectedCatagory, setSelectedCatagory] = useState(
     data?.category || []
   );
+  const [selectedCatagory1, setSelectedCatagory1] = useState([]);
+  console.log("data", data);
   const [techniciandata, settechniciandata] = useState([]);
   const [citydata, setcitydata] = useState([]);
   const [categorydata, setcategorydata] = useState([]);
@@ -218,7 +220,8 @@ function Technician() {
   ];
   const edit = (data) => {
     setdata(data);
-    handleShow(true);
+    setSelectedCatagory1(data.category)
+    handleShow();
   };
   useEffect(() => {
     const result = techniciandata.filter((item) => {
@@ -261,16 +264,17 @@ function Technician() {
 
   const onSelectCatagory = (selectedList, selectedItem) => {
     // Handle select event
-    setSelectedCatagory(selectedList);
-    console.log(selectedList);
-    console.log(selectedItem);
+    setcategory1(selectedList);
+  };
+
+  const onEditCatagory = (selectedList, selectedItem) => {
+    // Handle select event
+    setSelectedCatagory1(selectedList);
   };
 
   const onRemoveCatagory = (selectedList, removedItem) => {
     // Handle remove event
     setSelectedCatagory(selectedList);
-    console.log(selectedList);
-    console.log(removedItem);
   };
 
   return (
@@ -305,7 +309,6 @@ function Technician() {
                         <option value="technician">Technician</option>
                         <option value="pm">Project Manager</option>
                         <option value="Vendor">Vendor</option>
-
                       </select>
                     </div>
                   </div>
@@ -407,19 +410,16 @@ function Technician() {
                     <div className="vhs-input-label">
                       Category<span className="text-danger"> *</span>
                     </div>
-                   
                     <Multiselect
                       className="mt-3"
                       options={admin.category.map((category) => ({
                         name: category.name,
-                        // id: category._id,
                       }))}
-                      placeholder="Select Catagory"
+                      defaultValue="Select Catagory"
                       selectedValues={selectedCatagory}
                       onSelect={onSelectCatagory}
                       onRemove={onRemoveCatagory}
                       displayValue="name"
-                      // disablePreSelectedValues={true}
                       showCheckbox={true}
                     />{" "}
                   </div>
@@ -448,7 +448,7 @@ function Technician() {
           <div className="mt-5">
             <input
               type="text"
-              placeholder="Search here.."
+              defaultValue="Search here.."
               className="w-25 form-control"
               value={search}
               onChange={(e) => setsearch(e.target.value)}
@@ -467,7 +467,7 @@ function Technician() {
           </div>
         </div>
       </div>
-
+{/* ============================================ edit ======================================================================= */}
       <Modal
         show={show}
         onHide={handleClose}
@@ -475,7 +475,7 @@ function Technician() {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Technician</Modal.Title>
+          <Modal.Title>Edit Technician</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="card" style={{ marginTop: "30px" }}>
@@ -490,6 +490,7 @@ function Technician() {
                       <select
                         className="col-md-12 vhs-input-value"
                         onChange={(e) => setType1(e.target.value)}
+                        defaultValue={data?.Type}
                       >
                         <option>--select--</option>
                         <option value="exicutive">Exicutive</option>
@@ -514,8 +515,26 @@ function Technician() {
                       </select>
                     </div>
                   </div>
-
-                
+                  <div className="col-md-4">
+                    <Multiselect
+                      className="mt-3"
+                      options={
+                        
+                        data.category?.map((category) => ({
+                        name: category.name,
+                      }))
+                    
+                      
+                    }
+                     
+                      // defaultValue="Select Catagory"
+                      selectedValues={selectedCatagory1}
+                      onSelect={onEditCatagory}
+                      onRemove={onRemoveCatagory}
+                      displayValue="name"
+                      showCheckbox={true}
+                    />
+                  </div>
                 </div>
 
                 <div className="row pt-3">
@@ -528,7 +547,7 @@ function Technician() {
                         type="text"
                         className="col-md-12 vhs-input-value"
                         onChange={(e) => setvh(e.target.value)}
-                        placeholder={data.vhsname}
+                        defaultValue={data.vhsname}
                       />
                     </div>
                   </div>
@@ -541,7 +560,7 @@ function Technician() {
                         type="text"
                         className="col-md-12 vhs-input-value"
                         onChange={(e) => setsmsname1(e.target.value)}
-                        placeholder={data.smsname}
+                        defaultValue={data.smsname}
                       />
                     </div>
                   </div>
@@ -555,7 +574,7 @@ function Technician() {
                         type="text"
                         className="col-md-12 vhs-input-value"
                         onChange={(e) => setnumber1(e.target.value)}
-                        placeholder={data.number}
+                        defaultValue={data.number}
                       />
                     </div>
                   </div>
@@ -571,7 +590,7 @@ function Technician() {
                         type="text"
                         className="col-md-12 vhs-input-value"
                         onChange={(e) => setpassword1(e.target.value)}
-                        placeholder={data.password}
+                        defaultValue={data.password}
                       />
                     </div>
                   </div>
@@ -583,7 +602,7 @@ function Technician() {
                       <input
                         type="text"
                         className="col-md-12 vhs-input-value"
-                        placeholder={data.experiance}
+                        defaultValue={data.experiance}
                         onChange={(e) => setexperiance1(e.target.value)}
                       />
                     </div>
@@ -597,7 +616,7 @@ function Technician() {
                       <input
                         type="text"
                         className="col-md-12 vhs-input-value"
-                        placeholder={data.languagesknow}
+                        defaultValue={data.languagesknow}
                         onChange={(e) => setlanguagesknow1(e.target.value)}
                       />
                     </div>

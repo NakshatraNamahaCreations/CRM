@@ -64,7 +64,7 @@ function Dsrcallist() {
         );
         return formattedDates.includes(date) && item.category === category;
       });
-      console.log("getrunningdata filteredData checking address", filteredData);
+
       settreatmentData(filteredData);
       setSearchResults(filteredData);
     }
@@ -80,17 +80,10 @@ function Dsrcallist() {
 
       if (res.status === 200) {
         const filteredData = res.data.addcall.filter((i) => {
-          // console.log("i.serviceDate:", i.serviceDate);
-          // console.log("date:", date);
-          // console.log("treatment:", treatmentData);
-
           const dateMatches = i.serviceDate === date;
           const cardNoMatches = treatmentData.some((treatmentItem) => {
             return treatmentItem.cardNo === i.cardNo;
           });
-
-          // console.log("dateMatches:", dateMatches);
-          // console.log("cardNoMatches:", cardNoMatches);
 
           return dateMatches && cardNoMatches;
         });
@@ -205,8 +198,9 @@ function Dsrcallist() {
     const filt = dsrdata1.filter(
       (i) => i.serviceInfo[0]?._id === sId._id && i.serviceDate == date
     );
+    const TTnameValue = filt[0]?.TechorPMorVendorName;
 
-    return filt[0]?.TechorPMorVendorName;
+    return TTnameValue;
   };
 
   const SERVICESTARTED = (service) => {
@@ -225,49 +219,6 @@ function Dsrcallist() {
     return filterStartTime[0]?.endJobTime;
   };
 
-  // date, category
-
-  console.log("dsrdata1", dsrdata1);
-  console.log("treatmentData", treatmentData);
-
-  // console.log("paramsData", paramsData);
-
-  // for (const entry of treatmentData) {
-  //   if (entry.deliveryAddress) {
-  //     console.log("Address:", entry.deliveryAddress.address);
-  //   } else {
-  //     console.log("rbhf:", entry.customer[0].rbhf);
-  //     console.log("lnf:", entry.customer[0].lnf);
-  //     console.log("cnap:", entry.customer[0].cnap);
-  //     console.log("mainArea:", entry.customer[0].mainArea);
-  //     console.log("pinCode:", entry.customer[0].pinCode);
-  //   }
-  // }
-
-  // const chargeData = treatmentData.map((ele) => {
-  //   const charge = ele.dividedDates.reduce((acc, ele1, index) => {
-  //     const dividedDate = new Date(ele1.date).getDate();
-
-  //     if (
-  //       dividedDate === new Date(ele.dividedamtDates[index]?.date).getDate()
-  //     ) {
-  //       if (dividedDate === new Date(paramsData).getDate()) {
-  //         return ele.dividedamtCharges[index].charge;
-  //       }
-  //     }
-  //     return acc;
-  //   }, 0);
-
-  //   return {
-  //     workerName: ele.dsrdata[0]?.workerName,
-  //   service: selectedData.service,
-  //   charge: charge || 0,
-  //   desc: selectedData.desc
-  //   };
-  // });
-
-  // console.log("Charge data for each row:", chargeData);
-
   const charge = treatmentData.map((ele) => {
     const foundCharge = ele.dividedDates.reduce((acc, ele1, index) => {
       const dividedDate = new Date(ele1.date).getDate();
@@ -284,12 +235,7 @@ function Dsrcallist() {
 
     return foundCharge !== null ? foundCharge : 0;
   });
-  // const [d, setD] = useState(null);
-  // useEffect(() => {
-  //   setD(charge);
-  // }, [charge]);
-  // // console.log("todayWorkscharg3224e......", charge);
-  // let mappedd = d?.map((ele) => ele);
+
   return (
     <div className="web">
       <Header />
@@ -442,9 +388,10 @@ function Dsrcallist() {
                 <th className="table-head" scope="col">
                   Date
                 </th>
-                <th className="table-head" style={{ width: "13%" }} scope="col">
+                <th className="table-head" scope="col">
                   Time
                 </th>
+                
 
                 <th scope="col" className="table-head">
                   Customer Name
@@ -505,15 +452,24 @@ function Dsrcallist() {
                   <Link
                     to="/dsrdetails "
                     className="tbl"
-                    state={{ data: selectedData, data1: date }}
+                    state={{
+                      data: selectedData,
+                      data1: date,
+                      TTname: passfunction(selectedData),
+                    }}
                   >
                     <td>{i++}</td>
                     <td>{selectedData.category}</td>
                     <td>{date}</td>
-                    <td>{selectedData.time}</td>
+                    <td>{selectedData.selectedSlotText}</td>
 
                     <td>{selectedData.customer[0]?.customerName}</td>
-                    <td>{selectedData.customer[0]?.city}</td>
+
+                    {selectedData.type === "userapp" ? (
+                      <td>{selectedData.city}</td>
+                    ) : (
+                      <td>{selectedData.customer[0]?.city}</td>
+                    )}
                     <td>
                       {selectedData?.deliveryAddress
                         ? `
@@ -525,24 +481,21 @@ function Dsrcallist() {
                        ${selectedData.customer[0]?.cnap} ,
                        ${selectedData.customer[0]?.lnf}`}
                     </td>
-                    {/* {treatmentData?.deliveryAddress === null ||
-                    treatmentData?.deliveryAddress === undefined ? (
-                      <td>
-                        {" "}
-                        {selectedData.customer[0]?.rbhf} ,
-                        {selectedData.customer[0]?.cnap} ,
-                        {selectedData.customer[0]?.lnf}
-                      </td>
-                    ) : (
-                      <td>{treatmentData.deliveryAddress?.address}</td>
-                    )} */}
+
                     <td>{selectedData.customer[0]?.mainContact}</td>
-                    <td>{passfunction(selectedData)}</td>
+
+                    <td>
+                      {/* {TTname} */}
+                      {passfunction(selectedData)}
+                    </td>
 
                     <td>{dsrdata[0]?.workerName}</td>
                     <td>{selectedData.service}</td>
-
-                    <td>{charge} </td>
+                    {selectedData.type === "userapp" ? (
+                      <td>{selectedData?.GrandTotal}</td>
+                    ) : (
+                      <td>{charge} </td>
+                    )}
 
                     <td>{selectedData.desc}</td>
                   </Link>

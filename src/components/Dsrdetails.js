@@ -5,11 +5,10 @@ import { Link, NavLink, Navigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
 
-
 function Dsrdetails() {
   const admin = JSON.parse(sessionStorage.getItem("admin"));
   const location = useLocation();
-  const { data, data1 } = location.state || {};
+  const { data, data1, TTname } = location.state || {};
   const id = data?._id;
   const [dsrdata, setdsrdata] = useState([]);
 
@@ -84,6 +83,7 @@ function Dsrdetails() {
     getServiceManagement();
   }, []);
 
+  console.log("data?.city ",techniciandata )
   const gettechnician = async () => {
     let res = await axios.get(apiURL + "/getalltechnician");
     if ((res.status = 200)) {
@@ -168,7 +168,7 @@ function Dsrdetails() {
         data: {
           serviceDate: data1,
           serviceInfo: data,
-          serviceId:data?._id,
+          serviceId: data?._id,
           cardNo: data.cardNo,
           category: data.category,
           bookingDate: moment().format("DD-MM-YYYY"),
@@ -264,9 +264,7 @@ function Dsrdetails() {
   };
 
   const getServiceManagement = async () => {
-    let res = await axios.get(
-      "http://api.vijayhomeservicebengaluru.in/api/userapp/getservices"
-    );
+    let res = await axios.get(apiURL + "/userapp/getservices");
     if (res.status === 200) {
       setServiceData(res.data?.service);
       // console.log(res.data?.service);
@@ -301,7 +299,6 @@ function Dsrdetails() {
       });
     }
   });
-  console.log("Charge for the matched date:", matchingData);
 
   const getAlldata = async () => {
     let res = await axios.get(apiURL + "/getaggredsrdata");
@@ -418,7 +415,7 @@ function Dsrdetails() {
       data.serviceCharge
     );
 
-    const invoiceUrl = `http://localhost:3000/dsr_invoice_bill?id=${id}`;
+    const invoiceUrl = `https://vijayhomeservicebengaluru.in/dsr_invoice_bill?id=${id}`;
 
     const invoiceLink = serivePrice.replace(
       /\{Invoice_link\}/g,
@@ -911,24 +908,13 @@ function Dsrdetails() {
               </div>
 
               <div className="group pt-1 col-6">
-                {dsrdata &&
-                dsrdata?.length > 0 &&
-                dsrdata?.filter((dsrItem) => dsrItem.serviceDate === data1)
-                  ? data.dsrdata[0]?.filter(
-                      (dsrItem) => dsrItem.serviceDate === data1
-                    ).TechorPMorVendorName
-                  : ""}
-
+              
+                {TTname}
                 <select
                   className="col-md-12 vhs-input-value"
                   onChange={handleTechNameChange}
-                  value={
-                    selectedTechId ||
-                    (dsrdata?.filter((dsrItem) => dsrItem.serviceDate === data1)
-                      ? dsrdata?.filter(
-                          (itemAmount) => itemAmount.serviceDate === data1
-                        ).TechorPMorVendorName
-                      : "")
+                  defaultValue={
+                    TTname
                   }
                 >
                   <option>--select--</option>
@@ -959,35 +945,7 @@ function Dsrdetails() {
 
         <div className="row pt-3">
           <div className="row">
-            {/* <div className="col-6 d-flex">
-              <div className="col-4">SHOW IN APP</div>
-              <div className="col-1">:</div>
-              <div className="group pt-1 col-7">
-                <div className="d-flex">
-                  <label>
-                    <input
-                      type="radio"
-                      value="YES"
-                      className="custom-radio mx-2"
-                      checked={Showinapp === "YES"}
-                      onChange={handleChange}
-                    />
-                    YES
-                  </label>
-                  <label className="mx-5">
-                    <input
-                      type="radio"
-                      value="NO"
-                      className="custom-radio mx-2"
-                      checked={Showinapp === "NO"}
-                      onChange={handleChange}
-                    />
-                    NO
-                  </label>
-                </div>
-              </div>
-            </div> */}
-
+           
             <div className="col-6 d-flex">
               <div className="col-4">Send SMS</div>
               <div className="col-1">:</div>
@@ -1019,10 +977,7 @@ function Dsrdetails() {
                   ? renderStartDate
                   : "0000-00-00 00:00:00"}
 
-                {/* {renderStartDate} */}
-                {/* {dsrdata[0]?.startJobTime
-                  ? moment().format("lll")(dsrdata[0]?.startJobTime)
-                  : "0000-00-00 00:00:00"} */}
+              
               </div>
             </div>
 
@@ -1037,11 +992,7 @@ function Dsrdetails() {
                   ? renderEndDate
                   : "0000-00-00 00:00:00"}
 
-                {/* {data && data.dsrdata && data.dsrdata[0]?.endJobTime
-                  ? moment(dsrdata[0]?.endJobTime)
-                      .utc()
-                      .format("YYYY-MM-DD h:mm:ss a")
-                  : "0000-00-00 00:00:00"} */}
+             
               </div>
             </div>
           </div>

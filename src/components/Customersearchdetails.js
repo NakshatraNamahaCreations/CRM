@@ -186,7 +186,7 @@ function Customersearchdetails() {
 
       if (res.status === 200) {
         const responsedData = res.data.addcall;
-        console.log("without filter data", responsedData);
+     
         const dsrFilteredData = responsedData.filter(
           (item) => item.cardNo == id
         );
@@ -198,7 +198,7 @@ function Customersearchdetails() {
     }
   };
 
-  console.log("filtered dsr data", dsrData);
+
 
   //community details
   const getCommunityDetails = async () => {
@@ -278,12 +278,12 @@ function Customersearchdetails() {
     }
   };
 
-  console.log("whatsapp template data", dividedamtDates);
+
 
   const addtreatmentdetails = async (e) => {
     e.preventDefault();
     if (!contractType || !treatment) {
-      console.log(contractType, treatment, "qywfk");
+
       alert("Fill all feilds");
     } else {
       try {
@@ -808,9 +808,9 @@ function Customersearchdetails() {
                             .map((slot, index) => (
                               <option
                                 key={index}
-                                value={`${slot.startTime}-${slot.endTime}`}
+                                value={`${slot.startTime}`}
                               >
-                                {`${slot.startTime} - ${slot.endTime}`}
+                                {`${slot.startTime} `}
                               </option>
                             ))}
                         </select>
