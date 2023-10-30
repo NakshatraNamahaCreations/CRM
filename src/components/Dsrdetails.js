@@ -457,6 +457,7 @@ function Dsrdetails() {
     return plainText.replace(/\r?\n/g, " ");
   }
 
+  console.log("data.selectedSlotText",data.selectedSlotText)
   return (
     <div className="web">
       <Header />
@@ -541,8 +542,9 @@ function Dsrdetails() {
                     <select
                       className="col-md-12 vhs-input-value"
                       onChange={(e) => setappoTime(e.target.value)}
+                      defaultValue={data.selectedSlotText}
                     >
-                      <option>Choose Slot</option>
+                      <option>{data.selectedSlotText}</option>
                       {filteredSlots?.map((slot, index) => (
                         <option
                           key={index}

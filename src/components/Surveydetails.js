@@ -11,6 +11,8 @@ function Createquote() {
   const navigate = useNavigate();
   const location = useLocation();
   const { data } = location.state;
+
+  console.log("data-----", data);
   const [techniciandata, settechniciandata] = useState([]);
   const [vendordata, setvendordata] = useState([]);
   const apiURL = process.env.REACT_APP_API_URL;
@@ -22,6 +24,8 @@ function Createquote() {
   const [sendSms, setsendSms] = useState(data.sendSms);
   const [whatsappdata, setwhatsappdata] = useState([]);
   const [whatsappTemplate, setWhatsappTemplate] = useState("");
+  const [serviceSlots, setServiceSlots] = useState([]);
+  const [serviceDetails, setServiceDetails] = useState([]);
   let defaultChecked = false;
   if (data.length > 0 && typeof data.Type !== "undefined") {
     defaultChecked = data.Type || "";
@@ -30,6 +34,7 @@ function Createquote() {
   const handleChange2 = (event) => {
     settype(event.target.value);
   };
+  const [serviceId, setServiceId] = useState("");
 
   console.log("dsta", data);
   useEffect(() => {
@@ -59,7 +64,47 @@ function Createquote() {
     }
   };
 
+  useEffect(() => {
+    const getServicebyCategory = async () => {
+      try {
+        let res = await axios.post(apiURL + `/userapp/getservicebycategory/`, {
+          category: data?.enquirydata[0]?.category,
+        });
+        if (res.status === 200) {
+          // console.log("service details by category", res.data);
+          setServiceDetails(res.data?.serviceData);
+          if (res.data?.serviceData.length > 0) {
+            setServiceId(res.data.serviceData[0]._id);
+          } else {
+            setServiceSlots([]);
+          }
+        }
+      } catch (error) {
+        console.log("Error", error);
+      }
+    };
 
+    getServicebyCategory();
+  }, [data?.category]);
+
+  useEffect(() => {
+    const getSlotsByService = async () => {
+      try {
+        let res = await axios.post(apiURL + `/userapp/getslotsbyservice/`, {
+          serviceId: serviceId,
+        });
+        if (res.status === 200) {
+          setServiceSlots(res.data?.success.store_slots);
+        }
+      } catch (error) {
+        console.log("Error", error);
+      }
+    };
+
+    if (serviceId) {
+      getSlotsByService();
+    }
+  }, [serviceId]);
 
   useEffect(() => {
     getwhatsapptemplate();
@@ -75,7 +120,6 @@ function Createquote() {
   let getTemplateDatails = whatsappdata.find(
     (item) => item.templatename === "Survey Add"
   );
-
 
   const Save = async (e) => {
     e.preventDefault();
@@ -198,7 +242,9 @@ function Createquote() {
 
   const quotation = (data) => {
     if (data) {
-      window.location.assign(`/quotedetails/?id=${data.EnquiryId}`, { state: { data: data } });
+      window.location.assign(`/quotedetails/?id=${data.EnquiryId}`, {
+        state: { data: data },
+      });
     } else {
       // Handle the case when data is null or undefined
       // For example, show an error message or perform a different action
@@ -342,14 +388,28 @@ function Createquote() {
                   <div className="col-md-4 pt-3">
                     <div className="vhs-input-label">Apppointment Time </div>
                     <div className="group pt-1">
-                      <input
-                        type="text"
-                        defaultValue={
-                          data.appoTime ? data.appoTime : moment().format("LT")
-                        }
+                      <select
                         className="col-md-12 vhs-input-value"
                         onChange={(e) => setappTime(e.target.value)}
-                      />
+                        name="material"
+                        defaultValue={data.appoTime}
+                      >
+                        {data.appoTime ? (
+                          <option>{data.appoTime}</option>
+                        ) : (
+                          <option>--select--</option>
+                        )}
+                        {serviceSlots
+                          ?.filter(
+                            (slot) =>
+                              slot.slotCity === data?.enquirydata[0]?.city // Filter based on city match
+                          )
+                          .map((slot, index) => (
+                            <option key={index} value={`${slot.startTime}`}>
+                              {`${slot.startTime} `}
+                            </option>
+                          ))}
+                      </select>
                     </div>
                   </div>
                 </div>

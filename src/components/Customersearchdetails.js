@@ -305,6 +305,7 @@ function Customersearchdetails() {
             service: treatment,
             serviceID: serviceId,
             slots: selectedSlot,
+            selectedSlotText:selectedSlot,
             serviceCharge: serviceCharge,
             dateofService: dateofService,
             deliveryAddress: addingDeliveryAddress,
@@ -762,7 +763,7 @@ function Customersearchdetails() {
                             const selectedService = serviceDetails.find(
                               (item) => item._id === e.target.value
                             );
-                            console.log("Selected value", e.target.value);
+                           
                             if (selectedService) {
                               setServiceId(e.target.value);
                               const serviceName =

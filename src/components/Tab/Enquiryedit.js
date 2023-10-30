@@ -10,7 +10,7 @@ function Enquiryadd() {
   const { enquiryid } = useParams();
 const navigate=useNavigate();
   const [data, setdata] = useState([]);
-  console.log(data);
+  const [serivceName, setSeviceName] = useState("");
   const [citydata, setcitydata] = useState([]);
   const [categorydata, setcategorydata] = useState([]);
   const [EnquiryId, setEnquiryId] = useState(data.EnquiryId);
@@ -29,6 +29,8 @@ const navigate=useNavigate();
   const [comment, setcomment] = useState(data.comment);
   const [intrestedfor, setinterestedfor] = useState(data.intrestedfor);
   // const [executive, setinterestedfor] = useState(data.intrestedfor);
+  const [serviceData, setServiceData] = useState([]);
+  const [serivceId, setSeviceId] = useState("");
 
   const [time, settime] = useState(data.time);
   const apiURL = process.env.REACT_APP_API_URL;
@@ -46,6 +48,26 @@ const navigate=useNavigate();
       setsubcategorydata(res.data?.subcategory);
     }
   };
+
+  console.log(data)
+  const getServiceByCategory = async () => {
+    try {
+      let res = await axios.post(apiURL + `/userapp/getservicebycategory/`, {
+        category:category,
+      });
+      if (res.status === 200) {
+        setServiceData(res.data?.serviceData);
+        console.log("res.data?.serviceData",res.data?.serviceData)
+      } else {
+        setServiceData([]);
+      }
+    } catch (error) {
+      console.log("err", error);
+    }
+  };
+  useEffect(() => {
+    getServiceByCategory();
+  }, [category]);
 
   const addenquiry = async (e) => {
     e.preventDefault();
@@ -269,6 +291,7 @@ const navigate=useNavigate();
                       <select
                         className="col-md-12 vhs-input-value"
                         onChange={(e) => setcategory(e.target.value)}
+                        defaultValue={data[0]?.category}
                       >
                         <option>{data[0]?.category}</option>
                         {/* {categorydata.map((item) => (
@@ -346,14 +369,23 @@ const navigate=useNavigate();
                       <span className="text-danger"> *</span>
                     </div>
                     <div className="group pt-1">
-                      <select
+                    <select
                         className="col-md-12 vhs-input-value"
-                        onChange={(e) => setinterestedfor(e.target.value)}
+                        onChange={(e) => {
+                          const selectedService = serviceData.find(
+                            (item) => item._id === e.target.value
+                          );
+                          setSeviceId(e.target.value);
+                          setSeviceName(
+                            selectedService ? selectedService.serviceName : ""
+                          );
+                        }}
+                        // onChange={(e) => setSeviceName(e.target.value)}
                       >
-                        <option>{data[0]?.subcategory}</option>
-                        {subcategorydata.map((item) => (
-                          <option value={data[0]?.subcategory}>
-                            {item.subcategory}
+                        <option>---SELECT---</option>
+                        {serviceData.map((item) => (
+                          <option key={item.id} value={item._id}>
+                         {item.Subcategory}  - {item.serviceName}
                           </option>
                         ))}
                       </select>

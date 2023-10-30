@@ -84,7 +84,7 @@ function Enquiryadd() {
     (item) => item.templatename === "Enquiry Add"
   );
 
-  console.log("whatsappData:", getTemplateDatails);
+
 
   const getServiceByCategory = async () => {
     try {
@@ -472,17 +472,7 @@ function Enquiryadd() {
                       <span className="text-danger"> *</span>
                     </div>
                     <div className="group pt-1">
-                      {/* <select
-                        className="col-md-12 vhs-input-value"
-                        onChange={(e) => setinterestedfor(e.target.value)}
-                      >
-                        <option>--select--</option>
-                        {subcategorydata.map((item) => (
-                          <option value={item.subcategory}>
-                            {item.subcategory}
-                          </option>
-                        ))}
-                      </select> */}
+                    
                       <select
                         className="col-md-12 vhs-input-value"
                         onChange={(e) => {
