@@ -219,6 +219,14 @@ function Dsrcallist() {
     return filterStartTime[0]?.endJobTime;
   };
 
+  const SERVICECOMPLETEDBYOP = (service) => {
+    const filterStartTime = dsrdata1.filter(
+      (item) =>
+        item.serviceInfo[0]?._id === service._id && item.serviceDate == date
+    );
+    return filterStartTime[0]?.jobComplete;
+  };
+
   const charge = treatmentData.map((ele) => {
     const foundCharge = ele.dividedDates.reduce((acc, ele1, index) => {
       const dividedDate = new Date(ele1.date).getDate();
@@ -272,6 +280,12 @@ function Dsrcallist() {
           </div>
           <div className="ps-1 pe-1" style={{ backgroundColor: "#2196f3" }}>
             SERIVCE DELAYED
+          </div>
+          <div
+            className="ps-1 pe-1"
+            style={{ backgroundColor: "rgb(182, 96, 255)" }}
+          >
+            CLOSED OPERATION MANAGER
           </div>
         </div>
       </div>
@@ -391,7 +405,6 @@ function Dsrcallist() {
                 <th className="table-head" scope="col">
                   Time
                 </th>
-                
 
                 <th scope="col" className="table-head">
                   Customer Name
@@ -446,6 +459,8 @@ function Dsrcallist() {
                       ? "#ffeb3b"
                       : passfunction(selectedData)
                       ? "#e2e3e5"
+                      : SERVICECOMPLETEDBYOP(selectedData)
+                      ? "rgb(182, 96, 255)"
                       : "",
                   }}
                 >

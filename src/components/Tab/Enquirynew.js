@@ -402,7 +402,7 @@ function Enquirynew() {
                 <th className="bor">Contact</th>
                 <th className="bor">Address</th>
                 <th className="bor">City</th>
-                <th className="bor">Reference2</th>
+                <th className="bor">Reference</th>
 
                 <th className="bor">Interested for</th>
                 <th className="bor">Foll Date</th>
@@ -432,7 +432,7 @@ function Enquirynew() {
                     <td>{item.enquirydata[0]?.address}</td>
                     <td>{item.enquirydata[0]?.city}</td>
 
-                    <td>{item.enquirydata[0]?.reference2}</td>
+                    <td>{item.enquirydata[0]?.reference1}</td>
                     <td>{item.enquirydata[0]?.intrestedfor}</td>
                     <td>{item.folldate}</td>
                     <td>{item.staffname}</td>

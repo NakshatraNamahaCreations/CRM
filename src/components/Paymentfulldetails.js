@@ -119,7 +119,7 @@ function Payment() {
   useEffect(() => {
     getservicedata();
   }, []);
-  console.log("Payment Component", data2);
+
   const getPaymentById = async () => {
     try {
       const customerId = data2[0]?.customerData[0]._id;
@@ -158,7 +158,7 @@ function Payment() {
     navigate(-1); // Go back to the previous page
   };
 
-  console.log(data);
+
 
   return (
     <div className="web">

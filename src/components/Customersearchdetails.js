@@ -515,14 +515,24 @@ function Customersearchdetails() {
       /\{Video_link\}/g,
       selectedVideoLink
     );
-    const plainTextContent = stripHtml(serviceVideoLink);
-    console.log("plainTextContent", plainTextContent);
+    
+    
+
+    // Replace <p> with line breaks and remove HTML tags
+    const convertedText = serviceVideoLink
+    .replace(/<p>/g, "\n")
+    .replace(/<\/p>/g, "")
+    .replace(/<br>/g, "\n")
+    .replace(/&nbsp;/g, "")
+    .replace(/<strong>(.*?)<\/strong>/g, "<b>$1</b>")
+    .replace(/<[^>]*>/g, "");
+    
     const requestData = [
       {
         dst: "91" + contactNumber,
         messageType: "0",
         textMessage: {
-          content: plainTextContent,
+          content: convertedText,
         },
       },
     ];

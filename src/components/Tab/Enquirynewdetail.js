@@ -33,9 +33,6 @@ function Enquirynewdetail() {
 
   const apiURL = process.env.REACT_APP_API_URL;
 
-
-
-
   useEffect(() => {
     const getresponse = async () => {
       try {
@@ -85,8 +82,6 @@ function Enquirynewdetail() {
     getenquiryfollowup();
   }, []);
 
-
-
   let i = 1;
 
   // new and not interested
@@ -114,11 +109,9 @@ function Enquirynewdetail() {
       };
       await axios(config).then(function (response) {
         if (response.status === 200) {
- 
-        
           makeApiCall(whatsappTemplate, filterdata[0]?.contact1);
-      
-          window.location.assign(`/enquirydetail/${EnquiryId}`);
+
+          // window.location.assign(`/enquirydetail/${EnquiryId}`);
         }
       });
     } catch (error) {
@@ -158,7 +151,7 @@ function Enquirynewdetail() {
             // console.log("success");
             alert(" Added");
             makeApiCall(whatsappTemplate, filterdata[0]?.contact1);
-    
+
             window.location.assign(`/enquirydetail/${EnquiryId}`);
           }
         });
@@ -199,8 +192,7 @@ function Enquirynewdetail() {
             console.log("success");
             alert(" Added");
             makeApiCall(whatsappTemplate, filterdata[0]?.contact1);
-     
-          
+
             window.location.assign(`/enquirydetail/${EnquiryId}`);
           }
         });
@@ -237,11 +229,9 @@ function Enquirynewdetail() {
         };
         await axios(config).then(function (response) {
           if (response.status === 200) {
-   
             makeApiCall(whatsappTemplate, filterdata[0]?.contact1);
-       
-            navigate(`/convertcustomer/${EnquiryId}`);
 
+            navigate(`/convertcustomer/${EnquiryId}`);
           }
         });
       } catch (error) {
@@ -278,10 +268,8 @@ function Enquirynewdetail() {
         };
         await axios(config).then(function (response) {
           if (response.status === 200) {
-
-       
             makeApiCall(whatsappTemplate, filterdata[0]?.contact1);
-         
+
             navigate(`/createquote/${EnquiryId}`);
             // window.location.assign("/convertcustomer",{data});
           }
@@ -341,13 +329,12 @@ function Enquirynewdetail() {
 
     const contentTemplate = selectedResponse?.template || "";
 
-
-
     if (!contentTemplate) {
       console.error("Content template is empty. Cannot proceed.");
       return;
     }
-    console.log("91" + filterdata[0]?.contact1);
+  
+
     const content = contentTemplate.replace(
       /\{Customer_name\}/g,
       filterdata[0]?.name
@@ -361,21 +348,28 @@ function Enquirynewdetail() {
       admin?.contactno
     );
 
-    const plainTextContent = stripHtml(contentWithMobile);
-    const contentWithLineBreaks = plainTextContent.replace(
-      /<br\s*[/]?>/gi,
-      "\n"
-    );
-    const contentWithFormatting = contentWithLineBreaks
-      .replace(/\*([^*]+)\*/g, "*$1*") // Bold
-      .replace(/_([^_]+)_/g, "_$1_"); // Italic
-    console.log("plainTextContent", contentWithLineBreaks);
+   
+
+    // Replace <p> with line breaks and remove HTML tags
+    const convertedText = contentWithMobile
+    .replace(/<p>/g, "\n")
+    .replace(/<\/p>/g, "")
+    .replace(/<br>/g, "\n")
+    .replace(/&nbsp;/g, "")
+    .replace(/<strong>(.*?)<\/strong>/g, "<b>$1</b>")
+    .replace(/<[^>]*>/g, "");
+  
+
+  
+  
+
+
     const requestData = [
       {
         dst: "91" + contactNumber,
         messageType: "0",
         textMessage: {
-          content: contentWithFormatting,
+          content: convertedText,
         },
       },
     ];
@@ -398,11 +392,6 @@ function Enquirynewdetail() {
     }
   };
 
-  function stripHtml(html) {
-    const doc = new DOMParser().parseFromString(html, "text/html");
-    const plainText = doc.body.textContent || "";
-    return plainText.replace(/<[^>]+>/g, ""); // Remove all HTML tags but keep line breaks
-  }
   return (
     <div className="row">
       <Header />
@@ -424,7 +413,7 @@ function Enquirynewdetail() {
                     </Nav.Link>
                   </Nav.Item>
                   <Nav.Item>
-                  <Nav.Link eventKey="fourth">
+                    <Nav.Link eventKey="fourth">
                       <Link to="/new">New</Link>
                     </Nav.Link>
                   </Nav.Item>

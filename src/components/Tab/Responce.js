@@ -272,6 +272,13 @@ function Responce() {
                         &#123;&#36;#Var#&#125;)
                       </b>
                     </div>
+                    <div className="vhs-input-label">
+                    Note :
+                      <b>
+                        (&#x60;For bold *text*
+                        &#123;&#36;For Italic _*text*_&#125;)
+                      </b>
+                    </div>
                     <div className="group pt-1">
                       <p>{"Customer_name"}</p>
                       <p>Executive_name</p>
@@ -299,7 +306,10 @@ function Responce() {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title> Response : {data.response} </Modal.Title>
+          <Modal.Title>
+            {" "}
+            Response : {data.response} 
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div>
@@ -314,6 +324,9 @@ function Responce() {
                         onChange={(e) => setresponse1(e.target.value)}
                       />
                     </div> */}
+               
+                    <p>     Note:for bold use *text* </p>
+            <p>for Italic use _*text*_ </p>
             <div className="group pt-1">
               <CKEditor
                 editor={ClassicEditor}

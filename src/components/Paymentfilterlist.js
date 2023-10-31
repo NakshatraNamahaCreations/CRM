@@ -35,7 +35,6 @@ function Paymentfilterlist() {
     let res = await axios.get(apiURL + "/getrunningdata");
     if (res.status === 200) {
       const data = res.data?.runningdata;
-      console.log(data);
 
       const filteredData = data.filter((item) => {
         const formattedDates = item.dividedamtDates.map((date) =>
@@ -44,13 +43,10 @@ function Paymentfilterlist() {
         return formattedDates.includes(date);
       });
 
-      console.log("mydata", filteredData);
       settreatmentData(filteredData);
       setSearchResults(filteredData);
-      console.log(filteredData);
     }
   };
-  console.log(treatmentData[0]?.cardNo);
 
   useEffect(() => {
     getAlldata();
@@ -64,15 +60,9 @@ function Paymentfilterlist() {
           (i) => i.serviceDate === date && i.cardNo == treatmentData[0]?.cardNo
         )
       );
-      console.log(
-        res.data.addcall.filter(
-          (i) => i.serviceDate === date && i.cardNo == treatmentData[0]?.cardNo
-        )
-      );
     }
   };
 
-  console.log("dsrdata-----", dsrdata);
   // filter and search
   useEffect(() => {
     const filterResults = () => {
@@ -180,17 +170,15 @@ function Paymentfilterlist() {
     return totalAmount.toFixed(2); // Format the total amount with two decimal places
   }
 
-  // Function to calculate the pending amount (assuming the total amount is constant)
   function calculatePendingPaymentAmount(paymentData, serviceCharge) {
-    console.log("paymentData", serviceCharge);
     const totalAmount = calculateTotalPaymentAmount(paymentData);
 
-    console.log("totalAmount",parseFloat(serviceCharge[0]?.charge))
-    const pendingAmount =(totalAmount) - parseFloat(serviceCharge[0]?.charge);
-    console.log(pendingAmount);
-    // setpendingamt(pendingAmount.toFixed(2));
+    const pendingAmount = totalAmount - parseFloat(serviceCharge[0]?.charge);
+
     return pendingAmount.toFixed(2); // Format the pending amount with two decimal places
   }
+
+  const zero=0
   return (
     <div className="web">
       <Header />
@@ -395,7 +383,6 @@ function Paymentfilterlist() {
                       <p style={{ color: "green" }}>PAYMENT COLLECTED</p>
                     </td>
                   ) : (
-
                     <td>
                       <b>
                         {calculatePendingPaymentAmount(
@@ -510,11 +497,9 @@ function Paymentfilterlist() {
                             i.serviceDate === date
                         ),
                         selectedData.dividedamtCharges
-                      ) !== 0 ? (
-                        ""
-                      ) : (
+                      ) === zero ? (
                         <p style={{ color: "orange" }}>Close</p>
-                      )}
+                      ) : null}
                     </b>
                   </td>
                 </tr>

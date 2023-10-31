@@ -202,13 +202,25 @@ function Createquote() {
     const callDate = jobType.replace(/\{Call_date\}/g, data?.nxtfoll);
     const callTime = callDate.replace(/\{Call_time\}/g, data?.appoTime);
     const plainTextContent = stripHtml(callTime);
-    console.log("plainTextContent", plainTextContent);
+
+
+    
+    // Replace <p> with line breaks and remove HTML tags
+    const convertedText = callTime
+    .replace(/<p>/g, "\n")
+    .replace(/<\/p>/g, "")
+    .replace(/<br>/g, "\n")
+    .replace(/&nbsp;/g, "")
+    .replace(/<strong>(.*?)<\/strong>/g, "<b>$1</b>")
+    .replace(/<[^>]*>/g, "");
+  
+
     const requestData = [
       {
         dst: "91" + contactNumber,
         messageType: "0",
         textMessage: {
-          content: plainTextContent,
+          content: convertedText,
         },
       },
     ];
